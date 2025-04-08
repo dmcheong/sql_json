@@ -1,5 +1,5 @@
 <?php
-
+// Form handler for YAML files
 class FormHandlerYML {
     private $conn;
 

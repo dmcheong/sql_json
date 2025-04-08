@@ -1,0 +1,12 @@
+{
+    "name": "php-front",
+    "version": "1.0.0",
+    "scripts": {
+      "dev": "npx tailwindcss -i ./assets/input.css -o ./public/style.css --watch"
+    },
+    "devDependencies": {
+      "tailwindcss": "^3.4.0",
+      "postcss": "^8.4.0",
+      "autoprefixer": "^10.4.0"
+    }
+  }

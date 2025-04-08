@@ -1,6 +1,6 @@
 <?php
-require_once 'classes/FormHandler.php'; // même classe que JSON pour lecture DB
-$handler = new FormHandler();
+include 'classes/FormHandlerYML.php';
+$handler = new FormHandlerYML();
 $utilisateurs = $handler->tousLesUtilisateurs();
 ?>
 

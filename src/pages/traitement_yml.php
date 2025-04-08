@@ -1,5 +1,5 @@
 <?php
-require_once 'classes/FormHandlerYML.php';
+include 'classes/FormHandlerYML.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom']);

@@ -1,5 +1,5 @@
 <?php
-
+// Form handler for JSON files
 class FormHandler {
     private $conn;
 

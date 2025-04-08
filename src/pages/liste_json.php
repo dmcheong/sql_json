@@ -1,5 +1,5 @@
 <?php
-require_once 'classes/FormHandler.php';
+require_once '../classes/FormHandler.php';
 $handler = new FormHandler();
 $utilisateurs = $handler->tousLesUtilisateurs();
 ?>

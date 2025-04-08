@@ -1,30 +1,42 @@
-# Image complète avec Apache et PHP
+# Image de base
 FROM php:8.2-apache
 
-# Installer des outils utiles pour dev
+# Installer les outils nécessaires
 RUN apt-get update && apt-get install -y \
-    bash \
     curl \
     git \
-    zip \
+    zip\
     unzip \
     nano \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    bash \
+    nodejs \
+    npm\
     && docker-php-ext-install pdo_mysql mysqli
 
-# Activation du module Apache mod_rewrite (utile pour les routes propres)
+# Activer mod_rewrite
 RUN a2enmod rewrite
+
+# Éviter le warning Apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier uniquement à l'exécution du conteneur via volume
+# Copier les fichiers
 COPY ./src/ /var/www/html/
 
-# Exposition du port HTTP
+# Installer les dépendances npm
+RUN if [ -f package.json ]; then npm install; fi
+
+# Exposer le port
 EXPOSE 80
 
-# Commande par défaut
-CMD ["apache2-foreground"]
+# Donner les droits d'exécution à notre script de démarrage
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Lancer Apache et npm run dev en parallèle
+CMD ["/start.sh"]

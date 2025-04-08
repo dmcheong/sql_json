@@ -1,11 +1,12 @@
+<!-- add new json file from drag & drop -->
 <?php
-require_once 'classes/FormHandlerYML.php';
+require_once 'classes/FormHandler.php';
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Importer un utilisateur (YAML)</title>
+    <title>Importer un utilisateur JSON</title>
     <style>
         #drop-area {
             border: 2px dashed #ccc;
@@ -16,7 +17,6 @@ require_once 'classes/FormHandlerYML.php';
             width: 400px;
             background-color: #f9f9f9;
         }
-
         #drop-area.dragover {
             border-color: #000;
             background-color: #e9e9e9;
@@ -24,19 +24,16 @@ require_once 'classes/FormHandlerYML.php';
     </style>
 </head>
 <body>
-    <h1>📥 Importer un utilisateur via un fichier YAML</h1>
-
-    <form id="upload-form" action="import_yml.php" method="POST" enctype="multipart/form-data">
+    <h1>📥 Importer un fichier JSON</h1>
+    <form id="upload-form" action="import_json.php" method="POST" enctype="multipart/form-data">
         <div id="drop-area">
-            Glissez-déposez un fichier `.yml` ici<br><br>
+            Glissez-déposez un fichier .json ici<br><br>
             ou<br><br>
-            <input type="file" name="ymlfile" accept=".yml,.yaml">
+            <input type="file" name="jsonfile" accept=".json">
             <br><br>
             <button type="submit">Importer</button>
         </div>
     </form>
-
-    <p><a href="liste_yml.php">← Retour à la liste YAML</a></p>
 
     <script>
         const dropArea = document.getElementById('drop-area');
@@ -61,34 +58,24 @@ require_once 'classes/FormHandlerYML.php';
 </html>
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['ymlfile'])) {
-    $file = $_FILES['ymlfile']['tmp_name'];
+// Traitement après soumission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['jsonfile'])) {
+    $file = $_FILES['jsonfile']['tmp_name'];
     $content = file_get_contents($file);
+    $data = json_decode($content, true);
 
-    // Parser YAML "à la main" (structure simple)
-    $lines = explode("\n", $content);
-    $data = [];
-    foreach ($lines as $line) {
-        if (strpos($line, ':') !== false) {
-            list($key, $value) = explode(':', $line, 2);
-            $key = trim($key);
-            $value = trim($value, " \"");
-            if ($key) $data[$key] = $value;
-        }
-    }
-
-    if (isset($data['nom'], $data['email'])) {
-        $handler = new FormHandlerYML();
+    if ($data && isset($data['nom']) && isset($data['email'])) {
+        $handler = new FormHandler();
 
         if ($handler->emailExiste($data['email'])) {
             echo "<p style='color:orange'>⚠️ L'utilisateur avec l'email <strong>{$data['email']}</strong> existe déjà.</p>";
         } else {
             $handler->ajouterUtilisateur($data['nom'], $data['email']);
-            $handler->saveAsYml($data['nom'], $data['email']);
+            $handler->saveAsJson($data['nom'], $data['email']);
             echo "<p style='color:green'>✅ Utilisateur importé avec succès !</p>";
         }
     } else {
-        echo "<p style='color:red'>❌ Fichier YML invalide. Il doit contenir au minimum les champs <code>nom</code> et <code>email</code>.</p>";
+        echo "<p style='color:red'>❌ Fichier JSON invalide. Il doit contenir les champs <code>nom</code> et <code>email</code>.</p>";
     }
 }
 ?>

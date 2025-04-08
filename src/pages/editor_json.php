@@ -1,3 +1,4 @@
+<!-- edit json file from drag & drop -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,13 +19,13 @@
             background-color: #e9e9e9;
         }
 
-        form {
+        form-drop {
             margin: 40px auto;
             width: 400px;
             display: none;
         }
 
-        input[type="text"], input[type="email"] {
+        input-drop[type="text"], input-drop[type="email"] {
             width: 100%;
             padding: 8px;
             margin: 8px 0;
@@ -33,33 +34,33 @@
 </head>
 <body>
 
-    <h1>📥 Glisser un fichier JSON à modifier</h1>
+    <h1>📥 Glisser un fichier JSON à éditer</h1>
 
     <div id="drop-area">
         Glissez-déposez un fichier JSON ici<br><br>
         ou<br><br>
-        <input type="file" id="jsonFile" accept=".json">
+        <input-drop type="file" id="jsonFile" accept=".json">
     </div>
 
-    <form id="edit-form" method="POST" action="generate_json.php">
-        <input type="text" name="nom" placeholder="Nom"><br>
-        <input type="email" name="email" placeholder="Email"><br>
+    <form-drop id="edit-form-drop" method="POST" action="generate_json.php">
+        <input-drop type="text" name="nom" placeholder="Nom"><br>
+        <input-drop type="email" name="email" placeholder="Email"><br>
         <button type="submit">📤 Générer le nouveau fichier JSON</button>
-    </form>
+    </form-drop>
 
     <script>
         const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('jsonFile');
-        const form = document.getElementById('edit-form');
+        const form-drop = document.getElementById('edit-form-drop');
 
         function handleFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    form.style.display = "block";
-                    form.nom.value = data.nom || '';
-                    form.email.value = data.email || '';
+                    form-drop.style.display = "block";
+                    form-drop.nom.value = data.nom || '';
+                    form-drop.email.value = data.email || '';
                 } catch (err) {
                     alert("❌ Fichier JSON invalide.");
                 }
@@ -88,8 +89,6 @@
             handleFile(file);
         });
     </script>
-
-    <p><a href="liste.php">← Retour à la liste</a></p>
 
 </body>
 </html>

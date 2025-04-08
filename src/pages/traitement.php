@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $handler->ajouterUtilisateur($nom, $email);
 
     echo "<h2>Données traitées avec succès !</h2>";
-    echo '<p><a href="read.php">📄 Voir la liste des utilisateurs</a></p>';
+    echo '<p><a href="liste_yml.php">📄 Voir la liste des utilisateurs</a></p>';
 } else {
     echo "<h2>Requête invalide</h2>";
 }
