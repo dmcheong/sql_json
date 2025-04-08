@@ -61,4 +61,11 @@ class FormHandler {
         $id = (int) $id;
         return $this->conn->query("DELETE FROM users WHERE id = $id");
     }
+
+    public function emailExiste($email) {
+        $email = $this->conn->real_escape_string($email);
+        $result = $this->conn->query("SELECT id FROM users WHERE email = '$email' LIMIT 1");
+        return $result && $result->num_rows > 0;
+    }
+    
 }

@@ -1,3 +1,7 @@
+<?php
+require_once 'index_yml.php';
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,5 +22,13 @@
 
     <hr>
     <p><a href="read.php">📄 Voir la liste des utilisateurs</a></p>
+    <p><a href="editor_json.php">📄 créer un nouveau json à partir d'un existant</a></p>
+    <p><a href="editeur_yml.php">📄 créer un nouveau yml à partir d'un existant</a></p>
 </body>
 </html>
+
+<?php
+require_once 'import_json.php';
+// require_once 'editor_json.php';
+require_once 'import_yml.php';
+?>
