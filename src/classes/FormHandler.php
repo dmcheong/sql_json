@@ -52,38 +52,168 @@ class FormHandler {
         return $this->conn->query("DELETE FROM users WHERE id = $id");
     }    
     
-    public function saveAsJson($nom, $email) {
+    // public function saveAsJson($nom, $email) {
+    //     $data = [
+    //         'nom' => htmlspecialchars($nom),
+    //         'email' => htmlspecialchars($email),
+    //         'timestamp' => date('Y-m-d H:i:s')
+    //     ];
+
+    //     if (!is_dir('donnees')) {
+    //         mkdir('donnees', 0755, true);
+    //     }
+
+    //     $filename = 'donnees/' . time() . '_data.json';
+    //     file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+    // }
+    
+    // public function saveAsYml($nom, $email) {
+    //     $data = [
+    //         'nom' => $nom,
+    //         'email' => $email,
+    //         'timestamp' => date('Y-m-d H:i:s')
+    //     ];
+
+    //     $yml = "";
+    //     foreach ($data as $key => $value) {
+    //         $yml .= "$key: \"$value\"\n";
+    //     }
+
+    //     if (!is_dir('donnees')) {
+    //         mkdir('donnees', 0755, true);
+    //     }
+
+    //     $filename = 'donnees/user_' . time() . '.yml';
+    //     file_put_contents($filename, $yml);
+    // }
+
+    // public function genererJsonParId($id, $afficher = false) {
+    //     $id = (int)$id;
+    //     $user = $this->getUtilisateur($id);
+    
+    //     if (!$user) {
+    //         return false;
+    //     }
+    
+    //     $data = [
+    //         // 'id' => $user['id'],
+    //         'nom' => htmlspecialchars($user['nom']),
+    //         'email' => htmlspecialchars($user['email'])
+    //         // 'timestamp' => date('Y-m-d H:i:s')
+    //     ];
+    
+    //     if (!is_dir('donnees')) {
+    //         mkdir('donnees', 0755, true);
+    //     }
+    
+    //     $filename = 'donnees/user_' . $id . '.json';
+    //     file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+    
+    //     if ($afficher) {
+    //         header('Content-Type: application/json');
+    //         echo json_encode($data, JSON_PRETTY_PRINT);
+    //         exit;
+    //     }
+    
+    //     return $filename;
+    // }
+    
+    // public function genererYmlParId($id, $afficher = false) {
+    //     $id = (int)$id;
+    //     $user = $this->getUtilisateur($id);
+    
+    //     if (!$user) {
+    //         return false;
+    //     }
+    
+    //     $data = [
+    //         // 'id' => $user['id'],
+    //         'nom' => $user['nom'],
+    //         'email' => $user['email']
+    //         // 'timestamp' => date('Y-m-d H:i:s')
+    //     ];
+    
+    //     $yml = "";
+    //     foreach ($data as $key => $value) {
+    //         $yml .= "$key: \"$value\"\n";
+    //     }
+    
+    //     if (!is_dir('donnees')) {
+    //         mkdir('donnees', 0755, true);
+    //     }
+    
+    //     $filename = 'donnees/user_' . $id . '.yml';
+    //     file_put_contents($filename, $yml);
+    
+    //     if ($afficher) {
+    //         header('Content-Type: text/plain');
+    //         echo $yml;
+    //         exit;
+    //     }
+    
+    //     return $filename;
+    // }
+    public function genererJsonParId($id, $download = false) {
+        $id = (int)$id;
+        $user = $this->getUtilisateur($id);
+        if (!$user) return false;
+    
         $data = [
-            'nom' => htmlspecialchars($nom),
-            'email' => htmlspecialchars($email),
+            'id' => $user['id'],
+            'nom' => htmlspecialchars($user['nom']),
+            'email' => htmlspecialchars($user['email']),
             'timestamp' => date('Y-m-d H:i:s')
         ];
-
+    
         if (!is_dir('donnees')) {
             mkdir('donnees', 0755, true);
         }
-
-        $filename = 'donnees/' . time() . '_data.json';
+    
+        $filename = 'donnees/user_' . $id . '.json';
         file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+    
+        if ($download && file_exists($filename)) {
+            // header('Content-Type: application/json');
+            // header('Content-Disposition: attachment; filename="user_' . $id . '.json"');
+            readfile($filename);
+            exit;
+        }
+    
+        return $filename;
     }
     
-    public function saveAsYml($nom, $email) {
+    public function genererYmlParId($id, $download = false) {
+        $id = (int)$id;
+        $user = $this->getUtilisateur($id);
+        if (!$user) return false;
+    
         $data = [
-            'nom' => $nom,
-            'email' => $email,
+            'id' => $user['id'],
+            'nom' => $user['nom'],
+            'email' => $user['email'],
             'timestamp' => date('Y-m-d H:i:s')
         ];
-
+    
         $yml = "";
         foreach ($data as $key => $value) {
             $yml .= "$key: \"$value\"\n";
         }
-
+    
         if (!is_dir('donnees')) {
             mkdir('donnees', 0755, true);
         }
-
-        $filename = 'donnees/user_' . time() . '.yml';
+    
+        $filename = 'donnees/user_' . $id . '.yml';
         file_put_contents($filename, $yml);
+    
+        if ($download && file_exists($filename)) {
+            header('Content-Type: text/yaml');
+            header('Content-Disposition: attachment; filename="user_' . $id . '.yml"');
+            readfile($filename);
+            exit;
+        }
+    
+        return $filename;
     }
+    
 }

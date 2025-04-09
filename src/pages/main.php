@@ -14,7 +14,22 @@ $category = $_GET['category'] ?? null;
   <div class="flex min-h-screen">
     
     <!-- Sidebar -->
-    <?php include 'components/sidebar.php'; ?>
+    <?php
+      include 'components/sidebar.php';
+      if (isset($_GET['action'])) {
+        $action = $_GET['action'];
+        switch ($action) {
+            case 'delete':
+                include 'delete.php';
+                break;
+            case 'edit':
+                include 'actions/edit.php';
+                break;
+            default:
+                echo "<p>Action inconnue</p>";
+          }
+      } 
+    ?>
 
     <!-- Main Content -->
     <div class="flex-1 p-8">
