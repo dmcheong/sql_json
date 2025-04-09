@@ -1,4 +1,4 @@
 <?php
 // welcome page
-echo "hell o world"
+echo "hell o world";
 ?>

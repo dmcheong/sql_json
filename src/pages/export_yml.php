@@ -28,3 +28,4 @@ file_put_contents($filename, $yml);
 // Redirection vers le fichier généré
 header("Location: $filename");
 exit;
+?>

@@ -23,7 +23,7 @@ $category = $_GET['category'] ?? null;
           include "pages/$category.php";
         } else {
           echo "<h1 class='text-3xl font-bold mb-4'>Bienvenue !</h1>";
-          echo "<p>Sélectionne votre format dans le menu de gauche.</p>";
+          echo "<p>Bienvenue dans votre service YML/JSON.</p>";
         }
       ?>
     </div>

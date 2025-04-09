@@ -1,5 +1,5 @@
 <?php
-// Form handler for JSON files
+
 class FormHandler {
     private $conn;
 
@@ -18,26 +18,16 @@ class FormHandler {
     public function ajouterUtilisateur($nom, $email) {
         $nom = $this->conn->real_escape_string($nom);
         $email = $this->conn->real_escape_string($email);
-
         $sql = "INSERT INTO users (nom, email) VALUES ('$nom', '$email')";
         return $this->conn->query($sql);
     }
 
-    public function saveAsJson($nom, $email) {
-        $data = [
-            'nom' => htmlspecialchars($nom),
-            'email' => htmlspecialchars($email),
-            'timestamp' => date('Y-m-d H:i:s')
-        ];
-
-        if (!is_dir('donnees')) {
-            mkdir('donnees', 0755, true);
-        }
-
-        $filename = 'donnees/' . time() . '_data.json';
-        file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+    public function emailExiste($email) {
+        $email = $this->conn->real_escape_string($email);
+        $result = $this->conn->query("SELECT id FROM users WHERE email = '$email' LIMIT 1");
+        return $result && $result->num_rows > 0;
     }
-
+    
     public function tousLesUtilisateurs() {
         $result = $this->conn->query("SELECT * FROM users ORDER BY id DESC");
         return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
@@ -58,14 +48,42 @@ class FormHandler {
     }
 
     public function supprimerUtilisateur($id) {
-        $id = (int) $id;
+        $id = (int)$id;
         return $this->conn->query("DELETE FROM users WHERE id = $id");
-    }
+    }    
+    
+    public function saveAsJson($nom, $email) {
+        $data = [
+            'nom' => htmlspecialchars($nom),
+            'email' => htmlspecialchars($email),
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
 
-    public function emailExiste($email) {
-        $email = $this->conn->real_escape_string($email);
-        $result = $this->conn->query("SELECT id FROM users WHERE email = '$email' LIMIT 1");
-        return $result && $result->num_rows > 0;
+        if (!is_dir('donnees')) {
+            mkdir('donnees', 0755, true);
+        }
+
+        $filename = 'donnees/' . time() . '_data.json';
+        file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
     }
     
+    public function saveAsYml($nom, $email) {
+        $data = [
+            'nom' => $nom,
+            'email' => $email,
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
+
+        $yml = "";
+        foreach ($data as $key => $value) {
+            $yml .= "$key: \"$value\"\n";
+        }
+
+        if (!is_dir('donnees')) {
+            mkdir('donnees', 0755, true);
+        }
+
+        $filename = 'donnees/user_' . time() . '.yml';
+        file_put_contents($filename, $yml);
+    }
 }

@@ -1,24 +1,66 @@
 <?php
+// require_once 'classes/FormHandler.php';
+
+// if (!isset($_GET['id'])) {
+//     die("ID manquant");
+// }
+
+// $id = (int) $_GET['id'];
+
+// $handler = new FormHandler();
+// $user = $handler->getUtilisateur($id);
+
+// if (!$user) {
+//     die("Utilisateur introuvable");
+// }
+
+// $json = json_encode($user, JSON_PRETTY_PRINT);
+
+// // Créer dossier si besoin
+// if (!is_dir('donnees')) {
+//     mkdir('donnees', 0755, true);
+// }
+
+// // Enregistrer dans un fichier
+// $filename = "donnees/user_{$id}.json";
+// file_put_contents($filename, $json);
+
+// // Rediriger vers le fichier pour téléchargement
+// header("Location: $filename");
+// exit;
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once 'classes/FormHandler.php';
 
+if (!isset($_GET['id'])) {
+    die("ID utilisateur manquant.");
+}
+
 $handler = new FormHandler();
-$utilisateurs = $handler->tousLesUtilisateurs();
+$user = $handler->getUtilisateur((int)$_GET['id']);
 
-// Générer le JSON
-$json = json_encode($utilisateurs, JSON_PRETTY_PRINT);
+if (!$user) {
+    die("Utilisateur introuvable.");
+}
 
-// Créer le dossier s'il n'existe pas
+$data = [
+    'nom' => $user['nom'],
+    'email' => $user['email'],
+    'timestamp' => $user['created_at'] ?? date('Y-m-d H:i:s')
+];
+
+$json = json_encode($data, JSON_PRETTY_PRINT);
+
 if (!is_dir('donnees')) {
     mkdir('donnees', 0755, true);
 }
 
-// Enregistrer dans un fichier
-$fichier = 'donnees/liste_users.json';
-file_put_contents($fichier, $json);
+$filename = "donnees/user_{$user['id']}.json";
+file_put_contents($filename, $json);
 
-// Affichage
-echo "<h2>✅ Export JSON effectué</h2>";
-echo "<p>Fichier généré : <code>$fichier</code></p>";
-echo '<p><a href="' . $fichier . '" target="_blank">📂 Ouvrir le fichier JSON</a></p>';
-echo '<hr>';
-echo '<pre>' . $json . '</pre>';
+header("Location: $filename");
+exit;
+
+?>

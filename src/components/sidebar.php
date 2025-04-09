@@ -2,10 +2,8 @@
 // sidebar component menu navigate
 $categories = [
   'Accueil' => 'accueil',
-  'YAML' => 'liste_yml',
-  'Ajouter un yaml' => 'editor_yml',
-  'JSON' => 'liste_json',
-  'Ajouter un json' => 'editor_json',
+  'Liste' => 'liste',
+  'Ajouter un fichier' => 'editor'
 ];
 ?>
 
