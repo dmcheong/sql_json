@@ -32,7 +32,7 @@ COPY ./src/ /var/www/html/
 RUN if [ -f package.json ]; then npm install; fi
 
 # Exposer le port
-EXPOSE 80
+EXPOSE $EXP
 
 # Donner les droits d'exécution à notre script de démarrage
 COPY start.sh /start.sh
