@@ -1,18 +1,12 @@
 <?php
 
+require_once 'config/db_config.php';
+
 class FormHandler {
     private $conn;
 
     public function __construct() {
-        $host = getenv('DB_HOST') ?: 'db';
-        $user = getenv('DB_USER') ?: 'root';
-        $pass = getenv('DB_PASS') ?: 'root';
-        $dbname = getenv('DB_NAME') ?: 'monapp';
-
-        $this->conn = new mysqli($host, $user, $pass, $dbname);
-        if ($this->conn->connect_error) {
-            die("Erreur de connexion : " . $this->conn->connect_error);
-        }
+        $this->conn = getDBConnection();
     }
 
     public function ajouterUtilisateur($nom, $email) {
@@ -153,67 +147,69 @@ class FormHandler {
     
     //     return $filename;
     // }
-    public function genererJsonParId($id, $download = false) {
-        $id = (int)$id;
-        $user = $this->getUtilisateur($id);
-        if (!$user) return false;
+
+    ////////////////////////////////////////////////////////////////////////////
+    // public function genererJsonParId($id, $download = false) {
+    //     $id = (int)$id;
+    //     $user = $this->getUtilisateur($id);
+    //     if (!$user) return false;
     
-        $data = [
-            'id' => $user['id'],
-            'nom' => htmlspecialchars($user['nom']),
-            'email' => htmlspecialchars($user['email']),
-            'timestamp' => date('Y-m-d H:i:s')
-        ];
+    //     $data = [
+    //         'id' => $user['id'],
+    //         'nom' => htmlspecialchars($user['nom']),
+    //         'email' => htmlspecialchars($user['email']),
+    //         'timestamp' => date('Y-m-d H:i:s')
+    //     ];
     
-        if (!is_dir('donnees')) {
-            mkdir('donnees', 0755, true);
-        }
+    //     if (!is_dir('donnees')) {
+    //         mkdir('donnees', 0755, true);
+    //     }
     
-        $filename = 'donnees/user_' . $id . '.json';
-        file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+    //     $filename = 'donnees/user_' . $id . '.json';
+    //     file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
     
-        if ($download && file_exists($filename)) {
-            // header('Content-Type: application/json');
-            // header('Content-Disposition: attachment; filename="user_' . $id . '.json"');
-            readfile($filename);
-            exit;
-        }
+    //     if ($download && file_exists($filename)) {
+    //         // header('Content-Type: application/json');
+    //         // header('Content-Disposition: attachment; filename="user_' . $id . '.json"');
+    //         readfile($filename);
+    //         exit;
+    //     }
     
-        return $filename;
-    }
+    //     return $filename;
+    // }
     
-    public function genererYmlParId($id, $download = false) {
-        $id = (int)$id;
-        $user = $this->getUtilisateur($id);
-        if (!$user) return false;
+    // public function genererYmlParId($id, $download = false) {
+    //     $id = (int)$id;
+    //     $user = $this->getUtilisateur($id);
+    //     if (!$user) return false;
     
-        $data = [
-            'id' => $user['id'],
-            'nom' => $user['nom'],
-            'email' => $user['email'],
-            'timestamp' => date('Y-m-d H:i:s')
-        ];
+    //     $data = [
+    //         'id' => $user['id'],
+    //         'nom' => $user['nom'],
+    //         'email' => $user['email'],
+    //         'timestamp' => date('Y-m-d H:i:s')
+    //     ];
     
-        $yml = "";
-        foreach ($data as $key => $value) {
-            $yml .= "$key: \"$value\"\n";
-        }
+    //     $yml = "";
+    //     foreach ($data as $key => $value) {
+    //         $yml .= "$key: \"$value\"\n";
+    //     }
     
-        if (!is_dir('donnees')) {
-            mkdir('donnees', 0755, true);
-        }
+    //     if (!is_dir('donnees')) {
+    //         mkdir('donnees', 0755, true);
+    //     }
     
-        $filename = 'donnees/user_' . $id . '.yml';
-        file_put_contents($filename, $yml);
+    //     $filename = 'donnees/user_' . $id . '.yml';
+    //     file_put_contents($filename, $yml);
     
-        if ($download && file_exists($filename)) {
-            header('Content-Type: text/yaml');
-            header('Content-Disposition: attachment; filename="user_' . $id . '.yml"');
-            readfile($filename);
-            exit;
-        }
+    //     if ($download && file_exists($filename)) {
+    //         header('Content-Type: text/yaml');
+    //         header('Content-Disposition: attachment; filename="user_' . $id . '.yml"');
+    //         readfile($filename);
+    //         exit;
+    //     }
     
-        return $filename;
-    }
+    //     return $filename;
+    // }
     
 }
