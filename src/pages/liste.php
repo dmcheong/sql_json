@@ -12,35 +12,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     // exit;
 }
 
-// Génération JSON
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['json_id'])) {
-    $id = intval($_POST['json_id']);
-    $handler->genererJsonParId($id);
-    // header("Location: " . $_SERVER['PHP_SELF']);
-    // exit;
-}
+// // Génération JSON
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['json_id'])) {
+//     $id = intval($_POST['json_id']);
+//     $handler->genererJsonParId($id);
+//     // header("Location: " . $_SERVER['PHP_SELF']);
+//     // exit;
+// }
 
-// Génération YML
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['yml_id'])) {
-    $id = intval($_POST['yml_id']);
-    $handler->genererYmlParId($id);
-    // header("Location: " . $_SERVER['PHP_SELF']);
-    // exit;
-}
+// // Génération YML
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['yml_id'])) {
+//     $id = intval($_POST['yml_id']);
+//     $handler->genererYmlParId($id);
+//     // header("Location: " . $_SERVER['PHP_SELF']);
+//     // exit;
+// }
 
-// Génération + téléchargement immédiat JSON
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['json_download_id'])) {
-    $id = intval($_POST['json_download_id']);
-    $handler->genererJsonParId($id, true); // true = téléchargement
-    exit;
-}
+// // Génération + téléchargement immédiat JSON
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['json_download_id'])) {
+//     $id = intval($_POST['json_download_id']);
+//     $handler->genererJsonParId($id, true); // true = téléchargement
+//     exit;
+// }
 
-// Génération + téléchargement immédiat YML
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['yml_download_id'])) {
-    $id = intval($_POST['yml_download_id']);
-    $handler->genererYmlParId($id, true); // true = téléchargement
-    exit;
-}
+// // Génération + téléchargement immédiat YML
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['yml_download_id'])) {
+//     $id = intval($_POST['yml_download_id']);
+//     $handler->genererYmlParId($id, true); // true = téléchargement
+//     exit;
+// }
 
 $utilisateurs = $handler->tousLesUtilisateurs();
 ?>

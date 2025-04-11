@@ -5,38 +5,48 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     curl \
     git \
-    zip\
+    zip \
     unzip \
     nano \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
     bash \
-    nodejs \
-    npm\
-    && docker-php-ext-install pdo_mysql mysqli
+    npm \
+    && docker-php-ext-install pdo_mysql mysqli \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
-# Activer mod_rewrite
+# Active mod_rewrite
 RUN a2enmod rewrite
-
-# Éviter le warning Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Définir le dossier de travail
-WORKDIR /var/www/html
+# Définir le répertoire de travail
+WORKDIR /app
 
-# Copier les fichiers
+# Copier les fichiers de configuration Tailwind
+COPY package.json tailwind.config.js postcss.config.js ./
+
+# Préparer un cache npm sans conflit
+ENV npm_config_cache=/tmp/.npm
+RUN mkdir -p /tmp/.npm && chown -R root:root /tmp/.npm
+
+# Installer les dépendances (en root pour éviter les erreurs)
+RUN npm install
+
+# Donner les droits sur node_modules à www-data
+RUN chown -R www-data:www-data /app/node_modules
+
+# Compiler Tailwind une fois
+RUN npx tailwindcss -i ./src/assets/css/input.css -o ./src/assets/css/output.css
+
+# Copier l'application PHP
 COPY ./src/ /var/www/html/
 
-# Installer les dépendances npm
-RUN if [ -f package.json ]; then npm install; fi
+# Donner les droits d'accès au serveur
+RUN chown -R www-data:www-data /var/www/html
 
-# Exposer le port
-EXPOSE $EXP
+# Passer à www-data
+USER www-data
 
-# Donner les droits d'exécution à notre script de démarrage
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-# Lancer Apache et npm run dev en parallèle
-CMD ["/start.sh"]
+EXPOSE 80

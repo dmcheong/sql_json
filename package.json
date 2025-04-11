@@ -2,7 +2,7 @@
     "name": "php-front",
     "version": "1.0.0",
     "scripts": {
-      "dev": "npx tailwindcss -i ./assets/input.css -o ./public/style.css --watch"
+      "dev": "tailwindcss -i ./src/assets/input.css -o ./src/assets/output.css --watch"
     },
     "devDependencies": {
       "tailwindcss": "^3.4.0",

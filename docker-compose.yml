@@ -1,6 +1,6 @@
 services:
   web:
-    container_name: front-web
+    container_name: apache-php
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,10 +8,10 @@ services:
       - "${PORT_WEB}:${EXP}"
     volumes:
       - ./src:/var/www/html
-      - /var/www/html/node_modules
+    working_dir: /app
+    user: "${UID}:${GID}" 
     depends_on:
       - db
-    user: "${USER_WEB}:${USER_WEB}"
     environment:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
@@ -20,7 +20,7 @@ services:
       - DB_PASS=${DB_PASS}
     command: >
       bash -c "
-        npm run dev &
+        npm --cache /tmp/.npm run dev &
         apache2-foreground
       "
 
