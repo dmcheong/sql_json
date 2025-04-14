@@ -19,34 +19,31 @@ RUN apt-get update && apt-get install -y \
 
 # Active mod_rewrite
 RUN a2enmod rewrite
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Définir le répertoire de travail
-WORKDIR /app
+# Ajouter AllowOverride All dans le VirtualHost
+RUN sed -i '/DocumentRoot \/var\/www\/html/a <Directory /var/www/html>\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n</Directory>' /etc/apache2/sites-available/000-default.conf
 
-# Copier les fichiers de configuration Tailwind
+# Forcer index.php comme page d’accueil
+RUN echo "DirectoryIndex index.php index.html" >> /etc/apache2/apache2.conf
+
+# Dossier de travail
+WORKDIR /var/www/html
+
+# Copie des fichiers Tailwind
 COPY package.json tailwind.config.js postcss.config.js ./
 
-# Préparer un cache npm sans conflit
-ENV npm_config_cache=/tmp/.npm
-RUN mkdir -p /tmp/.npm && chown -R root:root /tmp/.npm
+# Nettoyage & setup du cache npm
+RUN rm -rf /tmp/.npm && mkdir -p /tmp/.npm && chmod -R 777 /tmp/.npm
 
-# Installer les dépendances (en root pour éviter les erreurs)
+# Définir le cache pour npm/npx
+ENV npm_config_cache=/tmp/.npm
+
+# Installer les dépendances
 RUN npm install
 
-# Donner les droits sur node_modules à www-data
-RUN chown -R www-data:www-data /app/node_modules
+# Copier les fichiers nécessaires à Tailwind
+COPY ./src ./src
 
-# Compiler Tailwind une fois
+# Compiler Tailwind
 RUN npx tailwindcss -i ./src/assets/css/input.css -o ./src/assets/css/output.css
 
-# Copier l'application PHP
-COPY ./src/ /var/www/html/
-
-# Donner les droits d'accès au serveur
-RUN chown -R www-data:www-data /var/www/html
-
-# Passer à www-data
-USER www-data
-
-EXPOSE 80

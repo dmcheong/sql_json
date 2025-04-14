@@ -8,7 +8,6 @@ services:
       - "${PORT_WEB}:${EXP}"
     volumes:
       - ./src:/var/www/html
-    working_dir: /app
     user: "${UID}:${GID}" 
     depends_on:
       - db
