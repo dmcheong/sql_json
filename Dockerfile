@@ -26,11 +26,12 @@ RUN sed -i '/DocumentRoot \/var\/www\/html/a <Directory /var/www/html>\nOptions 
 # Forcer index.php comme page d’accueil
 RUN echo "DirectoryIndex index.php index.html" >> /etc/apache2/apache2.conf
 
-# Dossier de travail
-WORKDIR /var/www/html
+# Dossier de travail pour npm sinon ecrasement par le volume de docker-compose
+WORKDIR /app
 
 # Copie des fichiers Tailwind
-COPY package.json tailwind.config.js postcss.config.js ./
+COPY package*.json ./ 
+COPY tailwind.config.js postcss.config.js ./
 
 # Nettoyage & setup du cache npm
 RUN rm -rf /tmp/.npm && mkdir -p /tmp/.npm && chmod -R 777 /tmp/.npm
@@ -38,8 +39,14 @@ RUN rm -rf /tmp/.npm && mkdir -p /tmp/.npm && chmod -R 777 /tmp/.npm
 # Définir le cache pour npm/npx
 ENV npm_config_cache=/tmp/.npm
 
+# activer le mode développement
+ENV NODE_ENV=development
+
 # Installer les dépendances
 RUN npm install
+
+# Vérification : afficher ce qu’on a installé
+RUN echo "node_modules :" && ls -la node_modules && npm list --depth=0
 
 # Copier les fichiers nécessaires à Tailwind
 COPY ./src ./src
@@ -47,3 +54,5 @@ COPY ./src ./src
 # Compiler Tailwind
 RUN npx tailwindcss -i ./src/assets/css/input.css -o ./src/assets/css/output.css
 
+# Dossier de travail pour apache
+WORKDIR /var/www/html

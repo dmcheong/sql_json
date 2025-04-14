@@ -4,6 +4,10 @@
     "scripts": {
       "dev": "tailwindcss -i ./src/assets/css/input.css -o ./src/assets/css/output.css --watch"
     },
+    "dependencies": {
+      "yaml": "^2.3.4",
+      "alpinejs": "^3.13.0"
+    },
     "devDependencies": {
       "tailwindcss": "^3.4.0",
       "postcss": "^8.4.0",
