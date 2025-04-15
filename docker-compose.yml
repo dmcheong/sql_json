@@ -8,8 +8,8 @@ services:
       - "${PORT_WEB}:${EXP}"
     volumes:
       - ./src:/var/www/html
-      - ./:/app
-    user: "${UID}:${GID}" 
+      - /app/node_modules
+    user: "${UID}:${UIG}" 
     depends_on:
       - db
     environment:
@@ -20,6 +20,7 @@ services:
       - DB_PASS=${DB_PASS}
     command: >
       bash -c "
+        cp /app/node_modules/alpinejs/dist/cdn.min.js /var/www/html/assets/vendor/alpine/alpine.min.js &&
         npm --cache /tmp/.npm run dev &
         apache2-foreground
       "

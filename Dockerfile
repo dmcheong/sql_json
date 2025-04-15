@@ -45,6 +45,12 @@ ENV NODE_ENV=development
 # Installer les dépendances
 RUN npm install
 
+# a cause de l'écrasement dans le docker-compose du volume /var/www/html/, on effectue la copie dans la command du docker-compose
+# on laisse ici la trace de construction pour la comprehension
+# # Copier Alpine.js dans un dossier public accessible par Apache
+# RUN mkdir -p /var/www/html/assets/vendor/alpine && \
+#     cp /app/node_modules/alpinejs/dist/cdn.min.js /var/www/html/assets/vendor/alpine/alpine.min.js
+    
 # Vérification : afficher ce qu’on a installé
 RUN echo "node_modules :" && ls -la node_modules && npm list --depth=0
 
@@ -55,4 +61,4 @@ COPY ./src ./src
 RUN npx tailwindcss -i ./src/assets/css/input.css -o ./src/assets/css/output.css
 
 # Dossier de travail pour apache
-WORKDIR /var/www/html
+# WORKDIR /var/www/html
