@@ -30,6 +30,17 @@
 
     </div>
 
+    <!-- Section des templates disponibles -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <template x-for="(tpl, name) in templates" :key="name">
+        <button 
+          class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-sm"
+          @click="loadTemplate(name)">
+          <span x-text="name"></span>
+        </button>
+      </template>
+    </div>
+
     <!-- Boutons d'action -->
     <div class="flex flex-wrap justify-center gap-4 mt-6">
       <button 
@@ -38,6 +49,12 @@
         Générer
       </button>
 
+      <button 
+        @click="copyOutput"
+        class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        Copier le rendu
+      </button>
+      
       <button 
         @click="reset"
         class="px-6 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
@@ -55,14 +72,14 @@
   </div>
 
   <script>
-    function templateGenerator() {
-      return {
-        input: '',
-        output: '',
-        error: '',
-        
-        loadDefaultTemplate() {
-          this.input = `{
+function templateGenerator() {
+  return {
+    input: '',
+    output: '',
+    error: '',
+
+    templates: {
+      "Exemple JSON": `{
   "title": "Exemple",
   "description": "Ceci est un template de démonstration",
   "active": true,
@@ -70,32 +87,62 @@
     {"name": "Item 1", "value": 100},
     {"name": "Item 2", "value": 200}
   ]
-}`;
-        },
+}`,
+      "Staff YAML": `name: Eiji Aonuma
+id: zelda-staff-01
+worked_on:
+  - https://zelda.fanapis.com/api/games/ocarina-of-time
+  - https://zelda.fanapis.com/api/games/majora-mask
+`,
+      "Boss JSON": `{
+  "name": "Ganon",
+  "type": "Final Boss",
+  "difficulty": "Extreme"
+}`
+    },
 
-        generateOutput() {
-          this.error = '';
-          try {
-            // Essayer JSON
-            const parsed = JSON.parse(this.input);
-            this.output = JSON.stringify(parsed, null, 2);
-          } catch (jsonErr) {
-            try {
-              // Essayer YAML
-              const parsed = YAML.parse(this.input);
-              this.output = YAML.stringify(parsed);
-            } catch (yamlErr) {
-              this.error = "Format non valide : le contenu n'est ni un JSON ni un YAML valide.";
-              this.output = '';
-            }
-          }
-        },
+    loadTemplate(name) {
+      this.input = this.templates[name];
+      this.output = '';
+      this.error = '';
+    },
 
-        reset() {
-          this.input = '';
+    loadDefaultTemplate() {
+      this.input = this.templates["Exemple JSON"];
+    },
+
+    generateOutput() {
+      this.error = '';
+      try {
+        const parsed = JSON.parse(this.input);
+        this.output = JSON.stringify(parsed, null, 2);
+      } catch (jsonErr) {
+        try {
+          const parsed = YAML.parse(this.input);
+          this.output = YAML.stringify(parsed);
+        } catch (yamlErr) {
+          this.error = "Format non valide : le contenu n'est ni un JSON ni un YAML valide.";
           this.output = '';
-          this.error = '';
         }
       }
+    },
+
+    copyOutput() {
+      if (this.output.trim() === '') {
+        this.error = "Rien à copier.";
+        return;
+      }
+      navigator.clipboard.writeText(this.output)
+        .then(() => this.error = "Rendu copié dans le presse-papier !")
+        .catch(() => this.error = "Échec lors de la copie.");
+    },
+
+    reset() {
+      this.input = '';
+      this.output = '';
+      this.error = '';
     }
+  }
+}
+
   </script>

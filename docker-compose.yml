@@ -21,6 +21,7 @@ services:
     command: >
       bash -c "
         cp /app/node_modules/alpinejs/dist/cdn.min.js /var/www/html/assets/vendor/alpine/alpine.min.js &&
+        curl -fSL -o /var/www/html/assets/vendor/yaml/yaml.min.js https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js &&
         npm --cache /tmp/.npm run dev &
         apache2-foreground
       "

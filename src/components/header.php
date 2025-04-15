@@ -19,7 +19,7 @@
   <script defer src="/assets/vendor/alpine/alpine.min.js"></script>
   <!-- Alpine.js via CDN (version stable) -->
   <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
-  <!--script defer src="/js/yaml.min.js"></script--> <!-- YAML JS local -->
+  <script defer src="/assets/vendor/yaml/yaml.min.js"></script> <!-- YAML JS local -->
 </head>
 <body class="bg-gray-100 min-h-screen p-4" x-data="templateTool()">
   <div class="flex min-h-screen">
