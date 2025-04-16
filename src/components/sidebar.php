@@ -2,11 +2,9 @@
 // sidebar component menu navigate
 $categories = [
   'Accueil' => 'accueil',
-  'Edition' => 'editor_template',
   'Liste' => 'liste',
-  'liste version bugg' => 'liste_old',
-  'Ajouter un fichier' => 'editor',
-  'test bdd' => 'test_conn'
+  'Edition' => 'editor_template',
+  'Ajouter un fichier' => 'editor'
 ];
 ?>
 

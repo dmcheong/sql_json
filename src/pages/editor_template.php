@@ -1,3 +1,4 @@
+<!-- generator json & yaml -->
 <div class="max-w-7xl mx-auto" 
        x-data="templateGenerator()" 
        x-init="loadDefaultTemplate()">
@@ -71,7 +72,48 @@
 
   </div>
 
+
   <script>
+function reformateYAML(text) {
+  const lines = text.split('\n');
+  let output = ['---'];
+
+  lines.forEach((line) => {
+    if (!line.trim()) {
+      output.push('');
+      return;
+    }
+
+    const indentMatch = line.match(/^(\s*)/);
+    const indent = indentMatch ? indentMatch[1] : '';
+
+    if (line.trim().startsWith('-')) {
+      const clean = line.trim().slice(1).trim();
+      const parts = clean.split(':');
+
+      if (parts.length > 2) {
+        const key = parts.shift().trim();
+        const value = parts.join(':').trim();
+        output.push(`${indent}- ${key}: "${value}"`);
+      } else {
+        output.push(`${indent}- ${clean}`);
+      }
+
+    } else {
+      const parts = line.split(':');
+      if (parts.length > 2) {
+        const key = parts.shift().trim();
+        const value = parts.join(':').trim();
+        output.push(`${indent}${key}: "${value}"`);
+      } else {
+        output.push(line);
+      }
+    }
+  });
+
+  return output.join('\n');
+}
+
 function templateGenerator() {
   return {
     input: '',
@@ -118,10 +160,9 @@ worked_on:
         this.output = JSON.stringify(parsed, null, 2);
       } catch (jsonErr) {
         try {
-          const parsed = YAML.parse(this.input);
-          this.output = YAML.stringify(parsed);
+          this.output = reformateYAML(this.input);
         } catch (yamlErr) {
-          this.error = "Format non valide : le contenu n'est ni un JSON ni un YAML valide.";
+          this.error = "Format non valide : le contenu YAML est mal structuré.";
           this.output = '';
         }
       }
@@ -144,5 +185,4 @@ worked_on:
     }
   }
 }
-
-  </script>
+</script>

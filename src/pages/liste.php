@@ -1,5 +1,5 @@
 <?php
-// liste des fichiers en formats JSON
+// liste des fichiers en formats JSON & YAML
 require_once 'classes/FormHandler.php';
 
 $handler = new FormHandler();

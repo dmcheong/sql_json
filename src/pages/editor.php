@@ -1,5 +1,5 @@
 <?php require_once 'classes/FormHandler.php'; ?>
-
+<!-- Drag & Drop form with insert mysql bdd -->
 <!DOCTYPE html>
 <html>
 <head>
